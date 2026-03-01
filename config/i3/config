@@ -1,0 +1,279 @@
+# Variables
+set $mod Mod4
+font pango:CaskaydiaCove Nerd Font Mono 15
+
+# Set workspaces to right monitor
+set $monitor_monitor "HDMI-0"
+set $monitor_laptop "eDP-1-1"
+
+# Avoid the weird cursor
+exec --no-startup-id xsetroot -cursor_name left_ptr
+
+# Lock screen with i3
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock 10 3 --nofork
+exec --no-startup-id xrandr --output $monitor_laptop --primary
+exec_always --no-startup-id xrandr --output $monitor_monitor --auto --right-of $monitor_laptop
+exec_always --no-startup-id feh -z $XDG_CONFIG_HOME/wallpapers --bg-fill
+
+# Fn keys
+set $refresh_i3status pkill -RTMIN+10 i3blocks
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -q set Master 10%+ unmute && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id amixer -q set Master 10%- unmute && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id amixer -q set Master toggle && $refresh_i3status
+
+bindsym XF86AudioPlay exec --no-startup-id playerctl -p spotify play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl -p spotify next
+bindsym XF86AudioPrev exec --no-startup-id playerctl -p spotify previous
+
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 10%+
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+focus_follows_mouse no
+
+# Remove tite bars
+set $border_size 2
+gaps inner $border_size
+smart_gaps on
+default_border pixel $border_size
+default_floating_border pixel $border_size
+
+# start a terminal
+bindsym $mod+Shift+Return exec alacritty -e bash -c "(tmux ls | grep -qEv 'attached|scratch' && tmux at) || tmux"
+
+# kill focused window
+bindsym $mod+Mod1+q kill
+
+# Rofi
+bindsym $mod+Return exec "rofi -show drun -modi drun,run -show-icons"
+bindsym Print exec "scrcap"
+
+# change focus
+bindsym $mod+h exec emacs-i3 left
+bindsym $mod+j exec emacs-i3 down
+bindsym $mod+k exec emacs-i3 up
+bindsym $mod+l exec emacs-i3 right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# split in horizontal orientation
+# bindsym $mod+n split h
+
+# split in vertical orientation
+# bindsym $mod+m split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+g fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+1 layout stacking
+bindsym $mod+2 layout tabbed
+bindsym $mod+3 layout toggle split
+
+# toggle tiling / floating
+# bindsym $mod+Shift+slash floating toggle
+
+# change focus between tiling / floating windows
+# bindsym $mod+slash focus mode_toggle
+
+# focus the parent container
+# bindsym $mod+i focus parent
+
+# focus the child container
+# bindsym $mod+o focus child
+
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 "1: A"
+set $ws2 "2: S"
+set $ws3 "3: Q"
+set $ws4 "4: W"
+set $ws5 "5: Z"
+set $ws6 "6: X"
+
+set $ws7 "7: D"
+set $ws8 "8: F"
+set $ws9 "9: E"
+set $ws10 "10: R"
+set $ws11 "11: C"
+set $ws12 "12: V"
+
+workspace $ws1 output $monitor_monitor
+workspace $ws2 output $monitor_monitor
+workspace $ws3 output $monitor_monitor
+workspace $ws4 output $monitor_monitor
+workspace $ws5 output $monitor_monitor
+workspace $ws6 output $monitor_monitor
+
+workspace $ws7 output $monitor_laptop
+workspace $ws8 output $monitor_laptop
+workspace $ws9 output $monitor_laptop
+workspace $ws10 output $monitor_laptop
+workspace $ws11 output $monitor_laptop
+workspace $ws12 output $monitor_laptop
+
+# switch to workspace
+bindsym $mod+a workspace number $ws1
+bindsym $mod+s workspace number $ws2
+bindsym $mod+q workspace number $ws3
+bindsym $mod+w workspace number $ws4
+bindsym $mod+z workspace number $ws5
+bindsym $mod+x workspace number $ws6
+
+bindsym $mod+d workspace number $ws7
+bindsym $mod+f workspace number $ws8
+bindsym $mod+e workspace number $ws9
+bindsym $mod+r workspace number $ws10
+bindsym $mod+c workspace number $ws11
+bindsym $mod+v workspace number $ws12
+
+# move focused container to workspace
+bindsym $mod+Shift+a move container to workspace number $ws1
+bindsym $mod+Shift+s move container to workspace number $ws2
+bindsym $mod+Shift+q move container to workspace number $ws3
+bindsym $mod+Shift+w move container to workspace number $ws4
+bindsym $mod+Shift+z move container to workspace number $ws5
+bindsym $mod+Shift+x move container to workspace number $ws6
+
+bindsym $mod+Shift+d move container to workspace number $ws7
+bindsym $mod+Shift+f move container to workspace number $ws8
+bindsym $mod+Shift+e move container to workspace number $ws9
+bindsym $mod+Shift+r move container to workspace number $ws10
+bindsym $mod+Shift+c move container to workspace number $ws11
+bindsym $mod+Shift+v move container to workspace number $ws12
+
+# focus next screen
+# bindsym $mod+comma focus output $monitor_laptop
+# bindsym $mod+period focus output $monitor_monitor
+
+# move container between screens
+# bindsym $mod+Shift+comma move container to output $monitor_laptop
+# bindsym $mod+Shift+period move container to output $monitor_monitor
+
+# scratchpads
+for_window [title="scratchpad"] move window to scratchpad, scratchpad show
+
+# emacs everywhere
+bindsym $mod+slash exec "$XDG_CONFIG_HOME/emacs/bin/doom +everywhere"
+for_window [title="emacs-anywhere"] floating enable
+
+bindsym $mod+Mod1+space exec emacsclient_custom scratchpad
+bindsym $mod++Shift+Mod1+space exec emacsclient_custom main
+bindsym $mod+space [title="scratchpad"] scratchpad show
+bindsym $mod+t [title="^(?!scratchpad)"] scratchpad show
+bindsym $mod+Shift+space move scratchpad
+
+# window rules
+for_window [class="Spotify"] move container to workspace $ws5
+for_window [title="Notion Calendar - Mozilla Firefox"] move container to workspace $ws12
+for_window [class="zoom"] move container to workspace $ws11
+for_window [class="Skype"] move container to workspace $ws11
+
+# switch to workspace with urgent window automatically
+for_window [urgent=latest] focus
+
+exec --no-startup-id emacsclient_custom main
+exec --no-startup-id emacsclient_custom scratchpad
+exec --no-startup-id /usr/bin/env firefox
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Mod1+r restart
+bindsym $mod+Mod1+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+b mode "resize"
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+#
+
+set $bg #3c3836
+set $red #cc241d
+set $green #98971a
+set $yellow #d79921
+set $blue #458588
+set $purple #b16286
+set $aqua #689d68
+set $gray #a89984
+set $darkgray #1d2021
+
+# class                 border  bground text    indicator child_border
+client.focused          yellow yellow $darkgray $purple $darkgray
+client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
+client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
+client.urgent           $red $red $white $red $red
+
+title_align center
+
+bar {
+    output $monitor_laptop
+    mode hide
+    tray_output primary
+    status_command i3blocks
+    padding $border_size
+    workspace_min_width 40
+    separator_symbol " 󰇘 "
+
+colors {
+        # bar background color
+        background $bg
+        # text color used for blocks that do not have a color specified.
+        statusline $yellow
+        # workspaces section
+        #                    border  backgr. text
+        focused_workspace    $aqua $aqua $darkgray
+        inactive_workspace   $darkgray $darkgray $yellow
+        active_workspace     $darkgray $darkgray $yellow
+        urgent_workspace     $red $red $bg
+    }
+}
+
+bar {
+    output $monitor_monitor
+    mode hide
+    padding $border_size
+    workspace_min_width 40
+
+    colors {
+# bar background color
+        background $bg
+        # text color used for blocks that do not have a color specified.
+        statusline $yellow
+        # workspaces section
+        #                    border  backgr. text
+        focused_workspace    $aqua $aqua $darkgray
+        inactive_workspace   $darkgray $darkgray $yellow
+        active_workspace     $darkgray $darkgray $yellow
+        urgent_workspace     $red $red $bg
+  }
+}

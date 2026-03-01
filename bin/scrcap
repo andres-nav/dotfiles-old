@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# A script that takes a screenshot (prompts you for what region/window to
+# capture) and stores it in the clipboard.
+
+tmp=$(mktemp)
+tmp_choice=/tmp/screenshot_choice
+trap "rm -f '$tmp'" EXIT
+trap "rm -f '$tmp_choice'" SIGINT
+
+# Create the options to pass to rofi: they will be clipboard, ocr, or ocr (spanish)
+# give a proper name to the options with a dictionary
+valid_options="clipboard\nocr\nocr_es"
+
+choice=""
+if [ -f $tmp_choice ]; then
+  choice=$(cat $tmp_choice)
+fi
+
+# check that the choice is valid and if not prompt the user to select one
+# if choice is empty or not in the valid_options list
+echo "Valid options: $valid_options"
+echo "Choice: $choice"
+if [ -z "$choice" ] || ! echo -e "$valid_options" | grep -q "$choice"; then
+  choice=$(echo -e "$valid_options" | nix run nixpkgs#rofi -- -dmenu -p "Select action")
+  echo "$choice" > $tmp_choice
+fi
+echo "Choice: $choice"
+
+if [ "$choice" = "ocr" ]; then
+  set -- ocr
+fi
+
+if nix run nixpkgs#maim -- -us >"$tmp"; then
+  if [ $choice = "ocr" ] || [ $choice = "ocr_es" ]; then
+    lang="eng"
+    if [ $choice = "ocr_es" ]; then
+      lang="spa"
+    fi
+    nix run nixpkgs#tesseract -- "$tmp" stdout -l "$lang" | nix run nixpkgs#xclip -- -selection clipboard
+  elif [ $choice = "clipboard" ]; then
+    nix run nixpkgs#xclip -- -selection clipboard -t image/png "$tmp"
+  fi
+else
+  echo "Failed to take screenshot" >&2
+fi

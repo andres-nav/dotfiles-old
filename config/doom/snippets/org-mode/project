@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: project
+# uuid: project
+# key: <pr
+# --
+#+filetags: :project:
+
+* Tasks
+* Important Info
+Goal: `%`$0
+Start:
+Finish:

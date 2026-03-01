@@ -1,0 +1,19 @@
+#!/usr/bin/env fish
+
+set SCRID scratchpad
+
+set focused (xdotool getactivewindow)
+set scratch (xdotool search --name $SCRID)
+
+if test -n "$scratch"
+    if test "$focused" = "$scratch"
+        xdotool windowkill $scratch
+    else
+        xdotool windowactivate $scratch
+    end
+else if command -v alacritty >/dev/null; and command -v tmux >/dev/null; and command -v lf >/dev/null
+    alacritty --title $SCRID -e tmux new-session -A -s $SCRID lf
+else
+    echo "No terminal or necessary tools to launch the scratch terminal with" >&2
+    exit 1
+end

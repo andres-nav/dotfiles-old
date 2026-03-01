@@ -1,0 +1,21 @@
+{
+  config,
+  options,
+  lib,
+  pkgs,
+  ...
+}:
+with lib;
+with lib.my; let
+  cfg = config.modules.desktop.media.discord;
+in {
+  options.modules.desktop.media.discord = {
+    enable = mkBoolOpt false;
+  };
+
+  config = mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      discord
+    ];
+  };
+}

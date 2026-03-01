@@ -1,0 +1,15 @@
+[user]
+	name = Andrés Navarro Pedregal
+	email = contact@andresnav.com
+
+[init]
+	defaultBranch = main
+
+[github]
+	user = andres-nav
+
+[gitlab]
+	user = andres-nav
+
+[includeIf "gitdir:~/git/cern/"]
+    	path = ~/.config/git/cern.config

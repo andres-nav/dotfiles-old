@@ -1,0 +1,2 @@
+- [ ] Check byte-compilation for python ([[https://github.com/globaleaks/GlobaLeaks/blob/main/debian/globaleaks.postinst][link]])
+- [ ] Check disable-swap ([[https://github.com/globaleaks/GlobaLeaks/blob/main/debian/globaleaks.preinst][link]])

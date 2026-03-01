@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: figure
+# key: fig
+# --
+\begin{figure}
+  \includegraphics{figures/${2:path.pdf}}
+  \caption{\label{fig:${3:label}} $0}
+\end{figure}

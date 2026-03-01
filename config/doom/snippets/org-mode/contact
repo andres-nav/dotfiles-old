@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: contact
+# uuid: contact
+# key: <co
+# --
+#+filetags: :contact:
+
+* Relationship
+`%`$0
+
+* Contact Information
+Linkedin
+Email:

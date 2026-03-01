@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: filetags
+# uuid: filetags
+# key: <ft
+# --
+#+filetags: :`%`$0:

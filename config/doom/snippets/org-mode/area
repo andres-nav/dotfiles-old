@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: area
+# uuid: area
+# key: <ar
+# --
+#+filetags: :area:
+
+* Tasks
+`%`$0

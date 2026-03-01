@@ -1,0 +1,2 @@
+This snippets are highly inspired by AndreaCrotti repository:
+https://github.com/AndreaCrotti/yasnippet-snippets/

@@ -1,0 +1,67 @@
+cmd hide_if_file &{{
+    if test -f "$f"; then
+        lf -remote "send $id hide"
+    fi
+}}
+
+cmd hide &{{
+    i3-msg [class="scratch"] scratchpad show
+}}
+
+cmd open_and_close_scratchpad :hide_if_file; open
+
+cmd open_emacsclient &{{
+	pwd | sed -r "s/\s/\\\ /g" | emacsclient .
+}}
+
+cmd fzf_file ${{
+    res="$(fd --type f . | fzf --reverse --header='Jump to location')"
+    if [ -n "$res" ]; then
+        if [ -d "$res" ]; then
+            cmd="cd"
+        else
+            cmd="select"
+        fi
+        res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+        lf -remote "send $id $cmd \"$res\""
+    fi
+}}
+
+cmd fzf_directory ${{
+    res="$(fd --type d . | fzf --reverse --header='Jump to location')"
+    if [ -n "$res" ]; then
+        if [ -d "$res" ]; then
+            cmd="cd"
+        else
+            cmd="select"
+        fi
+        res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+        lf -remote "send $id $cmd \"$res\""
+    fi
+}}
+
+map <c-d> :fzf_directory
+map <c-f> :fzf_file
+map . :shell -window 'read -p "Enter text: " input && [ -n "$input" ] && z "$input"'
+
+map q
+map <a-q> quit
+map ; read
+
+map D trash-put $fx
+
+map gm cd ~/MEGA
+map gi cd ~/MEGA/0_inbox
+map gb cd ~/MEGA/1_brain
+map ga cd ~/MEGA/2_attachments
+map gd cd ~/Downloads
+map gg cd ~/git
+map gt cd /tmp/
+
+map o $ echo $f | sed -r "s/\s/\\\ /g" | mimeopen --ask
+
+set drawbox
+set ratios 1:2:1
+
+map l open_and_close_scratchpad
+map <right> open_and_close_scratchpad

@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: subfigure
+# key: subfig
+# --
+\begin{figure}
+  \subfigure[$1]
+  {\label{fig:${2:label}}
+    \includegraphics{${4:path}}}
+
+  \caption{${5:caption}}
+\label{fig:${6:label}}
+\end{figure}

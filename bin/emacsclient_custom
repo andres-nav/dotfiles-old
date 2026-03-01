@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+echo $1
+if [[ "$1" == "scratchpad" ]] || [[ "$1" == "main" ]]; then
+    focused=$(xdotool getactivewindow)
+    exists=$(xdotool search --name $1)
+
+    if [[ -n $exists ]]; then
+        if [[ "$1" == "scratchpad" ]]; then
+            i3-msg [title=$1] scratchpad show
+        elif [[ "$1" == "main" ]]; then
+            i3-msg [title=$1] focus
+        fi
+    elif command -v emacsclient >/dev/null; then
+        if [[ "$1" == "scratchpad" ]]; then
+            emacsclient -nc -F '(quote (name . "scratchpad"))'  -e '(dired default-directory)'
+        elif [[ "$1" == "main" ]]; then
+            emacsclient -nc -F '(quote (name . "main"))'
+        fi
+    else
+        >&2 echo "No emacsclient found"
+        exit 2
+    fi
+else
+    >&2 echo "Invalid argument: $1. Must be either 'scratchpad' or 'main'"
+    exit 1
+fi
